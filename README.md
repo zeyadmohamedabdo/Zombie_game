@@ -1,80 +1,69 @@
-# Zombie Game - Reinforcement Learning Project
+# 🧟 Zombie Escape: Q-Learning Agent
 
-A reinforcement learning project where an agent learns to navigate a maze, defeat zombies in the correct order, and reach the exit.
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![Pygame](https://img.shields.io/badge/Library-Pygame-green)
+![RL](https://img.shields.io/badge/Algorithm-Q--Learning-red)
+![Gymnasium](https://img.shields.io/badge/Env-Gymnasium-orange)
 
-## Project Structure
+> A Reinforcement Learning project where an autonomous agent learns to navigate a dangerous maze, defeat zombies in a strict hierarchical order, and escape.
 
-- `zombie_env_short.py`: The game environment implementation
-- `q_learning_agent.py`: Q-learning agent implementation
-- `train_q_learning.py`: Training script
-- `assets/`: Directory containing game sprites
-- `q_table.npy`: Saved Q-table from training
+## 📖 Project Overview
+This project implements a **Q-Learning** algorithm to solve a complex grid-world environment. Unlike standard maze solvers, this agent has a constrained objective: it must eliminate threats (Zombies) in a specific sequence based on their power levels before traversing to the exit.
 
-## Environment Details
+**The Mission:**
+1.  Navigate the 8x8 Grid.
+2.  Defeat **Zombie Lvl 1** (Upper Right).
+3.  Defeat **Zombie Lvl 10** (Lower Right).
+4.  Defeat **Zombie Lvl 100** (Lower Left).
+5.  Reach the **Exit** (Center).
 
-The game environment features:
-- 8x8 grid world
-- Fixed positions for all entities:
-  - Warrior (player) starts in upper left
-  - Level 1 zombie in upper right
-  - Level 10 zombie in lower right
-  - Level 100 zombie in lower left
-  - Exit door in the middle
-- Maze-like wall structure
-- Fast movement speed for quick training
+## 🎥 Demo
+*[<img width="1003" height="758" alt="image" src="https://github.com/user-attachments/assets/b1663813-409b-4723-be7d-aaa1c5d00f1b" />
+]*
+> The agent starts with zero knowledge and learns the optimal path through trial and error over 5000 episodes.
 
-## Requirements
+## 🧠 The RL Architecture
 
-- Python 3.x
-- Required packages:
-  - numpy
-  - pygame
-  - gymnasium
+### 1. The Environment
+* **Grid Size:** 8x8 fixed grid.
+* **Obstacles:** Maze-like wall structure.
+* **Entities:** Warrior (Agent), 3 Zombies (Static positions), 1 Exit.
 
-Install dependencies:
+### 2. State & Action Space
+* **Action Space:** Discrete (4) -> `[UP, DOWN, LEFT, RIGHT]`
+* **State Space:** The agent observes its current coordinates and the status of the zombies (Alive/Dead).
+
+### 3. The Algorithm (Q-Learning)
+The agent uses the Bellman Equation to update the Q-values:
+
+$$Q(s, a) \leftarrow Q(s, a) + \alpha [R + \gamma \max_{a'} Q(s', a') - Q(s, a)]$$
+
+Where:
+* **$\alpha$ (Learning Rate):** How much new info overrides old info.
+* **$\gamma$ (Discount Factor):** Importance of future rewards.
+* **$R$:** Immediate reward received.
+
+## 🏆 Reward System
+To enforce the correct behavior, the environment utilizes a shaped reward function:
+
+| Event | Reward/Penalty | Reason |
+| :--- | :--- | :--- |
+| **Reaching Exit** | **+5000** | Ultimate Goal |
+| **Kill All Zombies** | **+500** | Secondary Goal |
+| **Kill Lvl 100** | +2000 | High Value Target |
+| **Kill Lvl 10** | +200 | Medium Value Target |
+| **Kill Lvl 1** | +20 | Low Value Target |
+| **Move to Target** | +5 | Heuristic to guide movement |
+| **Move to Exit** | +10 | Heuristic to guide escape |
+| **Hit Wall** | -1 | Penalty for collisions |
+| **Wrong Order** | **-200** | **Critical Penalty** to enforce logic |
+
+## 📂 Project Structure
 ```bash
-pip install -r requirements.txt
-```
-
-## Training the Agent
-
-To train the Q-learning agent:
-```bash
-python train_q_learning.py
-```
-
-Training parameters:
-- 5000 maximum episodes
-- Early stopping if reward > 5000
-- Progress updates every 5 episodes
-- Model saved when new best reward achieved
-- 200 steps maximum per episode
-
-## How to Play
-
-1. Run the training script
-2. Watch the agent learn to:
-   - Navigate the maze
-   - Defeat zombies in order (L1 → L10 → L100)
-   - Reach the exit
-3. The agent's performance improves over time as it learns optimal strategies
-
-## Key Features
-
-- Q-learning implementation
-- Fixed entity positions for consistent learning
-- Maze-like wall structure
-- Fast movement speed
-- Visual rendering of the game
-- Progress tracking and model saving
-
-## Notes
-
-- The agent learns through trial and error
-- Rewards are given for:
-  - Moving towards target zombie (+5)
-  - Moving towards exit (+10)
-  - Killing zombies (L1: +20, L10: +200, L100: +2000)
-  - Killing all zombies (+500)
-  - Reaching exit (+5000)
-  - Penalties for hitting walls (-1) and wrong zombie order (-200) 
+├── assets/                 # Game sprites (Player, Zombies, Walls)
+├── zombie_env_short.py     # Custom Gymnasium Environment logic
+├── q_learning_agent.py     # The Q-Learning Class implementation
+├── train_q_learning.py     # Main script to run training loop
+├── q_table.npy             # Saved binary file containing the trained knowledge
+├── requirements.txt        # Python dependencies
+└── README.md               # Documentation
