@@ -67,3 +67,4 @@ To enforce the correct behavior, the environment utilizes a shaped reward functi
 ├── q_table.npy             # Saved binary file containing the trained knowledge
 ├── requirements.txt        # Python dependencies
 └── README.md               # Documentation
+
