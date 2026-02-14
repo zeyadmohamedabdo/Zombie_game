@@ -1,4 +1,4 @@
-# 🧟 Zombie Escape: Q-Learning Agent
+# 🧟 Zombie Escape: Q-Learning Agent:
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![Pygame](https://img.shields.io/badge/Library-Pygame-green)
@@ -67,4 +67,5 @@ To enforce the correct behavior, the environment utilizes a shaped reward functi
 ├── q_table.npy             # Saved binary file containing the trained knowledge
 ├── requirements.txt        # Python dependencies
 └── README.md               # Documentation
+
 
